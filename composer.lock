@@ -1,0 +1,59 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "f1f2ddf0c2b0379ddda2fd65f83ebd13",
+    "packages": [
+        {
+            "name": "sean-ren/thrift",
+            "version": "0.9.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/longfeiRen/php-thrift.git",
+                "reference": "1ad2bace734cbbcf990cd345a1cc4a0e58a0184d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/longfeiRen/php-thrift/zipball/1ad2bace734cbbcf990cd345a1cc4a0e58a0184d",
+                "reference": "1ad2bace734cbbcf990cd345a1cc4a0e58a0184d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Thrift": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sean",
+                    "email": "rlf66164@sina.com"
+                }
+            ],
+            "description": "让Thrift使用起来更简洁",
+            "keywords": [
+                "php Thrift"
+            ],
+            "time": "2015-10-14 08:35:10"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.3.0"
+    },
+    "platform-dev": []
+}
