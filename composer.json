@@ -2,11 +2,11 @@
   "name": "tonydeng/tcp4p",
   "description": "TCP4P (Thrift Client Pool For PHP)",
   "license": "MIT",
-  "keywords": ["php thrift"],
+  "keywords": ["php, thrift, tcp4p"],
   "version": "0.9.3",
   "authors": [
     {
-      "name": "tonydeng",
+      "name": "Tony Deng",
       "email": "wolf.deng@gmail.com"
     }
   ],
