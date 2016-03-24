@@ -3,7 +3,7 @@
   "description": "TCP4P (Thrift Client Pool For PHP)",
   "license": "MIT",
   "keywords": ["php","thrift","tcp4p"],
-  "version": "0.9.3",
+  "version": "1.0.0",
   "authors": [
     {
       "name": "Tony Deng",
