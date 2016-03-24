@@ -277,7 +277,6 @@ class TSocket extends TTransport
       } elseif ($data == '' && feof($this->handle_)) {
           throw new TTransportException('TSocket read 0 bytes');
         }
-
       return $data;
     } elseif ($readable === 0) {
         throw new TTransportException('TSocket: timed out reading '.$len.' bytes from '.

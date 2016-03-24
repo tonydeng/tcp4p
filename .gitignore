@@ -1,0 +1,55 @@
+*.class
+*.DS_Store
+
+
+# External tool builders
+.externalToolBuilders/
+
+
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+#Idea Files#
+*.iml
+*.ipr
+*.iws
+.idea/
+
+#Netbeans Files
+nbproject
+
+#ZendFramework Files
+INSTALL.txt
+LICENSE.txt
+README.txt
+demos/
+extras/documentation
+*.config/
+appliction/captcha
+
+#Yii File
+assets/
+protected/runtime/
+themes/classic/views/
+
+
+
+# Sublime plugin files #
+.phpintel
+
+# composer files #
+/vendor
+**/**/vendor
+composer.lock
+
+.phpintel
+
+/**/**/*.compiled
+public/static/*
+
+.DS_Store
+**/**/.DS_Store
