@@ -52,13 +52,24 @@ class ThriftInstance
     protected $thriftAsyncInstances = array();
 
     /**
+     * thrift发送超时配置
+     * @var int
+     */
+    private $sendTimeout = 60000;
+    /**
+     * thrift调用返回超时配置
+     * @var int
+     */
+    private $recvTimeout = 60000;
+
+
+    /**
      * 初始化工作
      * @return void
      */
     public function __construct($serviceName)
     {
-        if(empty($serviceName))
-        {
+        if (empty($serviceName)) {
             throw new \Exception('serviceName can not be empty', 500);
         }
         $this->serviceName = $serviceName;
@@ -73,25 +84,22 @@ class ThriftInstance
     public function __call($method_name, $arguments)
     {
         // 异步发送
-        if(0 === strpos($method_name ,self::ASYNC_SEND_PREFIX))
-        {
+        if (0 === strpos($method_name, self::ASYNC_SEND_PREFIX)) {
             $real_method_name = substr($method_name, strlen(self::ASYNC_SEND_PREFIX));
             $arguments_key = serialize($arguments);
             $method_name_key = $method_name . $arguments_key;
             // 判断是否已经有这个方法的异步发送请求
-            if(isset($this->thriftAsyncInstances[$method_name_key]))
-            {
+            if (isset($this->thriftAsyncInstances[$method_name_key])) {
                 // 删除实例，避免在daemon环境下一直出错
                 unset($this->thriftAsyncInstances[$method_name_key]);
-                throw new \Exception($this->serviceName."->$method_name(".implode(',',$arguments).") already has been called, you can't call again before you call ".self::ASYNC_RECV_PREFIX.$real_method_name, 500);
+                throw new \Exception($this->serviceName . "->$method_name(" . implode(',', $arguments) . ") already has been called, you can't call again before you call " . self::ASYNC_RECV_PREFIX . $real_method_name, 500);
             }
 
             // 创建实例发送请求
             $instance = $this->__instance();
-            $callback = array($instance, 'send_'.$real_method_name);
-            if(!is_callable($callback))
-            {
-                throw new \Exception($this->serviceName.'->'.$method_name. ' not callable', 400);
+            $callback = array($instance, 'send_' . $real_method_name);
+            if (!is_callable($callback)) {
+                throw new \Exception($this->serviceName . '->' . $method_name . ' not callable', 400);
             }
             $ret = call_user_func_array($callback, $arguments);
             // 保存客户单实例
@@ -99,25 +107,22 @@ class ThriftInstance
             return $ret;
         }
         // 异步接收
-        if(0 === strpos($method_name, self::ASYNC_RECV_PREFIX))
-        {
+        if (0 === strpos($method_name, self::ASYNC_RECV_PREFIX)) {
             $real_method_name = substr($method_name, strlen(self::ASYNC_RECV_PREFIX));
-            $send_method_name = self::ASYNC_SEND_PREFIX.$real_method_name;
+            $send_method_name = self::ASYNC_SEND_PREFIX . $real_method_name;
             $arguments_key = serialize($arguments);
             $method_name_key = $send_method_name . $arguments_key;
             // 判断是否有发送过这个方法的异步请求
-            if(!isset($this->thriftAsyncInstances[$method_name_key]))
-            {
-                throw new \Exception($this->serviceName."->$send_method_name(".implode(',',$arguments).") have not previously been called", 500);
+            if (!isset($this->thriftAsyncInstances[$method_name_key])) {
+                throw new \Exception($this->serviceName . "->$send_method_name(" . implode(',', $arguments) . ") have not previously been called", 500);
             }
 
             $instance = $this->thriftAsyncInstances[$method_name_key];
             // 先删除客户端实例
             unset($this->thriftAsyncInstances[$method_name_key]);
-            $callback = array($instance, 'recv_'.$real_method_name);
-            if(!is_callable($callback))
-            {
-                throw new \Exception($this->serviceName.'->'.$method_name. ' not callable', 400);
+            $callback = array($instance, 'recv_' . $real_method_name);
+            if (!is_callable($callback)) {
+                throw new \Exception($this->serviceName . '->' . $method_name . ' not callable', 400);
             }
             // 接收请求
             $ret = call_user_func_array($callback, array());
@@ -130,9 +135,8 @@ class ThriftInstance
         // 每次都重新创建一个实例
         $this->thriftInstance = $this->__instance();
         $callback = array($this->thriftInstance, $method_name);
-        if(!is_callable($callback))
-        {
-            throw new \Exception($this->serviceName.'->'.$method_name. ' not callable', 1400);
+        if (!is_callable($callback)) {
+            throw new \Exception($this->serviceName . '->' . $method_name . ' not callable', 1400);
         }
         // 调用客户端方法
         $ret = call_user_func_array($callback, $arguments);
@@ -154,17 +158,19 @@ class ThriftInstance
 
         // Transport
         $socket = new \Thrift\Transport\TSocket($ip, $port);
+
+        //timeout config
+        $socket->setSendTimeout($this->sendTimeout);
+        $socket->setRecvTimeout($this->recvTimeout);
+
         $transport_name = ThriftClient::getTransport($this->serviceName);
         $transport = new $transport_name($socket);
         // Protocol
         $protocol_name = ThriftClient::getProtocol($this->serviceName);
         $protocol = new $protocol_name($transport);
-        try 
-        {
+        try {
             $transport->open();
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             // 无法连上，则踢掉这个地址
             AddressManager::kickAddress($address);
             throw $e;
@@ -174,8 +180,7 @@ class ThriftInstance
         $class_name = ThriftClient::getServiceDir($this->serviceName);
 
         // 类不存在则报出异常
-        if(!class_exists($class_name))
-        {
+        if (!class_exists($class_name)) {
             throw new \Exception("Class $class_name not found in directory $service_dir");
         }
         // 初始化一个实例

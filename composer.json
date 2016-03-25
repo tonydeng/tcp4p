@@ -1,17 +1,22 @@
 {
   "name": "tonydeng/tcp4p",
-  "description": "TCP4P (Thrift Client Pool For PHP)",
+  "type":"library",
+  "description": "Thrift Client Pool For PHP",
   "license": "MIT",
   "keywords": ["php","thrift","tcp4p"],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "authors": [
     {
       "name": "Tony Deng",
-      "email": "wolf.deng@gmail.com"
+      "email": "wolf.deng@gmail.com",
+      "role":"Developer"
     }
   ],
+  "support":{
+    "issues": "https://github.com/tonydeng/tcp4p/issues"
+  },
   "require": {
-    "php": ">=5.6.0"
+    "php": ">=5.3.2"
   },
   "autoload": {
     "psr-0": {
