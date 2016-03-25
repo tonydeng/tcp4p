@@ -55,12 +55,12 @@ class ThriftInstance
      * thrift发送超时配置
      * @var int
      */
-    private $sendTimeout = 60000;
+    private $sendTimeout = 20000;
     /**
      * thrift调用返回超时配置
      * @var int
      */
-    private $recvTimeout = 60000;
+    private $recvTimeout = 20000;
 
 
     /**
